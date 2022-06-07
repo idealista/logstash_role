@@ -1,0 +1,4 @@
+---
+{{ ansible_managed | comment }}
+- pipeline.id: my-pipeline_1
+  path.config: "{{ logstash_config_pipelines_path }}/logstash-simple.conf"

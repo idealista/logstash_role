@@ -1,0 +1,31 @@
+---
+dist: xenial
+language: python
+python: "3.9"
+os: linux
+services:
+  - docker
+install:
+  - pip install pipenv
+  - pipenv sync
+env:
+  jobs:
+    - MOLECULE_DISTRO=idealista/jdk:11.0.14-buster-openjdk-headless LOGSTASH_VERSION=8.2.2 USE_JAVA_HOME=True
+    - MOLECULE_DISTRO=idealista/jdk:11.0.14-bullseye-openjdk-headless LOGSTASH_VERSION=8.2.2 USE_JAVA_HOME=True
+    - MOLECULE_DISTRO=idealista/jdk:11.0.14-buster-openjdk-headless LOGSTASH_VERSION=7.17.4 USE_JAVA_HOME=True
+    - MOLECULE_DISTRO=idealista/jdk:11.0.14-bullseye-openjdk-headless LOGSTASH_VERSION=7.17.4 USE_JAVA_HOME=True
+    - MOLECULE_DISTRO=debian:buster-slim LOGSTASH_VERSION=8.2.2
+    - MOLECULE_DISTRO=debian:bullseye-slim LOGSTASH_VERSION=8.2.2
+    - MOLECULE_DISTRO=debian:buster-slim LOGSTASH_VERSION=7.17.4
+    - MOLECULE_DISTRO=debian:bullseye-slim LOGSTASH_VERSION=7.17.4
+script:
+  - pipenv run molecule test --all
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+  email:
+    if: branch = main
+    recipients:
+      - desarrollo.benders@idealista.com
+    on_success: change
+    on_failure: always

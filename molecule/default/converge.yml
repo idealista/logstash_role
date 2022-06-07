@@ -1,0 +1,16 @@
+---
+
+- name: Converge
+  hosts: logstash_group
+  roles:
+    - role: logstash_role
+
+- name: Copy test log for test
+  hosts: logstash_group
+  tasks:
+    - name: Add a line to a test-log to check logstash
+      ansible.builtin.lineinfile:
+        path: /var/log/test-log.log
+        line: This is a test log
+        create: yes
+        mode: '0644'

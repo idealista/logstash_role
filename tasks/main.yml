@@ -1,0 +1,16 @@
+---
+
+- name: LOGSTASH | Install
+  import_tasks: install.yml
+  tags:
+    - logstash_install
+
+- name: LOGSTASH | Configure
+  import_tasks: config.yml
+  tags:
+    - logstash_configure
+
+- name: LOGSTASH | Service
+  import_tasks: service.yml
+  tags:
+    - logstash_service

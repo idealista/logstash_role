@@ -1,0 +1,32 @@
+---
+- name: LOGSTASH | Ensure skeleton paths
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ logstash_user }}"
+    group: "{{ logstash_group }}"
+    mode: u=rwX,g=rX,o=rX
+    recurse: yes
+    state: directory
+  loop: "{{ logstash_skeleton_paths | select | list }}"
+
+- name: LOGSTASH | Configure logstash.yml
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ logstash_user }}"
+    group: "{{ logstash_group }}"
+    mode: '0644'
+  with_items:
+    - { src: "{{ logstash_conf_yml_file }}", dest: "{{ logstash_config_path }}/logstash.yml"}
+    - { src: "{{ logstash_pipelines_conf_yml_file }}", dest: "{{ logstash_config_path }}/pipelines.yml"}
+  notify: restart logstash
+
+- name: LOGSTASH | Configure pipelines files Logstash
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "{{ logstash_config_pipelines_path }}/{{ item | basename | regex_replace('.j2$') }}"
+    owner: "{{ logstash_user }}"
+    group: "{{ logstash_group }}"
+    mode: '0644'
+  with_fileglob: "{{ logstash_pipelines_templates_conf_path }}/*"
+  notify: restart logstash

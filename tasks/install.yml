@@ -1,0 +1,51 @@
+---
+- name: LOGSTASH | Ensure logstash group
+  ansible.builtin.group:
+    name: "{{ logstash_group }}"
+    gid: "{{ logstash_gid | default(omit) }}"
+    system: yes
+    state: present
+
+- name: LOGSTASH | Ensure logstash user
+  ansible.builtin.user:
+    name: "{{ logstash_user }}"
+    group: "{{ logstash_group }}"
+    uid: "{{ logstash_uid | default(omit) }}"
+    system: yes
+    shell: "{{ logstash_user_shell }}"
+    createhome: no
+
+- name: LOGSTASH | Add package dependencies
+  ansible.builtin.apt:
+    name: "{{ logstash_package_dependencies }}"
+    state: present
+    update_cache: true
+
+- name: LOGSTASH | Add gpg key
+  ansible.builtin.apt_key:
+    url: "{{ logstash_gpg_key }}"
+    state: present
+
+- name: LOGSTASH | Add ppa repository
+  ansible.builtin.apt_repository:
+    repo: "{{ logstash_ppa_source }}"
+    state: present
+    filename: logstash
+
+- name: LOGSTASH | Install logstash without version defined and {{ logstash_package_state }} state
+  ansible.builtin.apt:
+    name: "logstash"
+    update_cache: true
+    state: "{{ logstash_package_state }}"
+  notify:
+    - restart logstash
+  when: logstash_version is not defined
+
+- name: LOGSTASH | Install logstash {{ logstash_version }} and {{ logstash_package_state }} state
+  ansible.builtin.apt:
+    name: "logstash=1:{{ logstash_version }}-1"
+    update_cache: true
+    state: "{{ logstash_package_state }}"
+  notify:
+    - restart logstash
+  when: logstash_version is defined

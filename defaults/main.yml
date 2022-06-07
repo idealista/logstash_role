@@ -1,0 +1,81 @@
+---
+
+## General
+# Version
+logstash_version: 8.2.2
+
+# Package config
+logstash_package_dependencies:
+  - apt-transport-https
+
+logstash_package_state: present
+logstash_major_version: "{{ logstash_version.split('.')[0] }}"
+logstash_gpg_key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+logstash_ppa_source: "deb https://artifacts.elastic.co/packages/{{ logstash_major_version }}.x/apt stable main"
+
+# Installation path
+logstash_config_path: /etc/logstash
+logstash_config_pipelines_path: "{{ logstash_config_path }}/conf.d"
+logstash_data_path: /var/lib/logstash
+logstash_log_path: /var/log/logstash
+logstash_pid_path: /var/run/logstash
+logstash_home_path: /usr/share/logstash
+
+# For example if you have path for store queue, you can add your path here
+# logstash_skeleton_paths: {{ logstash_skeleton_paths + [desired_variable] }}
+logstash_skeleton_paths: "{{ logstash_skeleton_additional_paths + logstash_skeleton_base_paths }}"
+
+logstash_skeleton_base_paths:
+  - "{{ logstash_config_path }}"
+  - "{{ logstash_config_pipelines_path }}"
+  - "{{ logstash_data_path }}"
+  - "{{ logstash_log_path }}"
+  - "{{ logstash_pid_path }}"
+  - "{{ logstash_service_config_path }}"
+
+# If you need any custom path to be owned and permissions for logstash add to this variable.
+logstash_skeleton_additional_paths: []
+
+## Service options
+logstash_user: logstash
+# Optional uid for logstash_user
+# logstash_uid: 997
+
+# Optional gid for logstash_group
+# logstash_gid: 997
+logstash_group: logstash
+
+logstash_user_shell: /usr/sbin/nologin
+
+# Start on boot
+logstash_service_enabled: True
+# Current state: started, stopped
+logstash_service_state: started
+
+# Configuration
+# You can add any config desired documented here https://www.elastic.co/guide/en/logstash/current/logstash-settings-file.html
+# logstash_config:
+#    pipeline:
+#      batch:
+#        size: 250
+#        delay: 100
+
+
+# By default use embedded jdk on logstash, if you put 'true' it will use $JAVA_HOME jvm
+# Not recommended if you haven't a good reason for that
+# use_java_home: false
+
+# Path where *.conf.j2 templates pipelines are stored.
+logstash_pipelines_templates_conf_path: "{{ role_path }}/templates/config/pipelines"
+# Template *.j2 for logstash.yml config.
+logstash_conf_yml_file: "{{ role_path }}/templates/config/logstash.yml.j2"
+# Template *.j2 for pipelines.yml config.
+# By default input from beats on 5044 and output to elasticsearch on localhost:9200
+# You must to override this config
+logstash_pipelines_conf_yml_file: "{{ role_path }}/templates/config/pipelines.yml.j2"
+
+# Additional systemd path for custom service config. Add jvm options for example Xmx or Xms
+# You can check molecule scenario config for variables and templates
+logstash_service_config_path: /etc/systemd/system/logstash.service.d
+logstash_service_dropin_template_path: "{{ role_path }}/templates/logstash"
+logstash_service_dropin_template: "{{ logstash_service_dropin_template_path }}/service.conf"

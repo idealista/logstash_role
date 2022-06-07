@@ -1,0 +1,18 @@
+---
+
+galaxy_info:
+  author: idealista
+  company: Idealista S.A.U.
+  description: Logstash Role
+  min_ansible_version: 2.10.0
+  license: Apache 2.0
+  galaxy_tags:
+    - elk
+    - logstash
+    - elastic
+    - logs
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - buster

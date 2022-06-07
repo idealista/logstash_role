@@ -1,0 +1,6 @@
+---
+{{ ansible_managed | comment }}
+path.data: {{ logstash_data_path }}
+path.logs: {{ logstash_log_path }}
+
+{{ logstash_config | to_nice_yaml }}

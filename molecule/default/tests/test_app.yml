@@ -1,0 +1,46 @@
+---
+file:
+  {{ logstash_config_path }}:
+    exists: true
+    owner: {{ logstash_user }}
+    group: {{ logstash_group }}
+    filetype: directory
+  {{ logstash_data_path }}:
+    exists: true
+    owner: {{ logstash_user }}
+    group: {{ logstash_group }}
+    filetype: directory
+  {{ logstash_log_path }}:
+    exists: true
+    owner: {{ logstash_user }}
+    group: {{ logstash_group }}
+    filetype: directory
+  {{ logstash_pid_path }}:
+    exists: true
+    owner: {{ logstash_user }}
+    group: {{ logstash_group }}
+    filetype: directory
+  /var/log/logstash/parsed-log.log:
+    exists: true
+    filetype: file
+    contains: ["This is a test log"] # Check file content for these patterns
+group:
+  {{ logstash_group }}:
+    exists: true
+    gid:
+      lt: 1000
+
+user:
+  {{ logstash_user }}:
+    exists: true
+    uid:
+      lt: 1000
+    gid:
+      lt: 1000
+    groups:
+      - {{ logstash_group }}
+
+service:
+  logstash:
+    enabled: true
+    running: true

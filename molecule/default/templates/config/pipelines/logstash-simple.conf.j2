@@ -1,0 +1,15 @@
+input {
+    file {
+        path => "/var/log/test-log.log"
+        type => "file"
+        start_position => "beginning"
+    }
+}
+output {
+   file {
+     path => "/var/log/logstash/parsed-log.log"
+     codec => line {
+       format => "%{message}"
+     }
+   }
+}

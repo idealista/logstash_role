@@ -1,0 +1,28 @@
+---
+- name: LOGSTASH | Create and config drop-in service config
+  block:
+    - name: LOGSTASH | Create logstash drop-in service config
+      ansible.builtin.file:
+        path: "{{ logstash_service_config_path }}"
+        owner: "{{ logstash_user }}"
+        group: "{{ logstash_group }}"
+        mode: '0755'
+        state: directory
+
+    - name: LOGSTASH | Add drop-in file config to elastic service
+      ansible.builtin.template:
+        src: "{{ logstash_service_dropin_template }}"
+        dest: "{{ logstash_service_config_path }}/{{ logstash_service_dropin_template | basename }}"
+        owner: "{{ logstash_user }}"
+        group: "{{ logstash_group }}"
+        mode: '0644'
+      notify: restart logstash
+  when: logstash_service_dropin_template is defined
+
+- name: LOGSTASH | Configure service
+  ansible.builtin.systemd:
+    name: logstash
+    state: "{{ logstash_service_state }}"
+    enabled: "{{ logstash_service_enabled }}"
+    daemon_reload: true
+  register: logstash_service_output

@@ -1,0 +1,15 @@
+---
+## General
+logstash_pipelines_templates_conf_path: "{{ playbook_dir }}/templates/config/pipelines"
+
+logstash_service_dropin_template_path: "{{ playbook_dir }}/templates/logstash"
+logstash_service_dropin_template: "{{ logstash_service_dropin_template_path }}/service.conf"
+
+logstash_skeleton_additional_paths:
+  - '/var/log/logstash/a'
+
+logstash_config:
+  pipeline:
+    batch:
+      size: 250
+      delay: 100
