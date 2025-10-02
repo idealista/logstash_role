@@ -7,6 +7,7 @@ logstash_version: 8.2.2
 # Package config
 logstash_package_dependencies:
   - apt-transport-https
+  - gpg
 
 logstash_package_state: present
 logstash_major_version: "{{ logstash_version.split('.')[0] }}"
