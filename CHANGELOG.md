@@ -6,5 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a ch
 ## [Unreleased](https://github.com/idealista/logstash_role/tree/develop)
 ### [Full Changelog](https://github.com/idealista/logstash_role/compare/1.0.0...X.Y.Z)
 
+## [1.0.1](https://github.com/idealista/logstash_role/tree/1.0.1)
+- Add gpg missing dependency in deb installation.
+
+
 ## [1.0.0](https://github.com/idealista/logstash_role/tree/1.0.0)
 - Initial release
